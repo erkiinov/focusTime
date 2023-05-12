@@ -5,6 +5,7 @@ import { Countdown } from "../components/CountDown";
 import { RoundedButton } from "../components/Button";
 import { spacing } from "../utils/sizes";
 import { colors } from "../utils/colors";
+import { Timing } from "./Timing";
 
 const ONE_SECOND_IN_MS = 1000;
 
@@ -17,13 +18,15 @@ const pattern = [
   1 * ONE_SECOND_IN_MS,
 ];
 
-export const Timer = ({ focusSubject }) => {
+export const Timer = ({ focusSubject, clearSubject }) => {
   const [isStarted, setIsStarted] = useState(false);
   const [progress, setProgress] = useState(1);
+  const [munutes, setMinutes] = useState(1);
   return (
     <View style={styles.container}>
       <View style={styles.countdown}>
         <Countdown
+          minutes={munutes}
           isPaused={!isStarted}
           onProgress={setProgress}
           onEnd={() => {
@@ -43,13 +46,18 @@ export const Timer = ({ focusSubject }) => {
           style={{ height: spacing.sm }}
         />
       </View>
-
+      <View style={styles.timingWrapper}>
+        <Timing onChangeTime={setMinutes} />
+      </View>
       <View style={styles.buttonWrapper}>
         {!isStarted ? (
           <RoundedButton title="Start" onPress={() => setIsStarted(true)} />
         ) : (
           <RoundedButton title="Stop" onPress={() => setIsStarted(false)} />
         )}
+      </View>
+      <View style={styles.clearWrapper}>
+        <RoundedButton size={50} title="-" onPress={clearSubject} />
       </View>
     </View>
   );
@@ -64,8 +72,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  timingWrapper: {
+    flex: 0.1,
+    paddingTop: spacing.xxl,
+    flexDirection: "row",
+  },
   buttonWrapper: {
-    flex: 0.4,
+    flex: 0.3,
     flexDirection: "row",
     padding: 15,
     paddingTop: 50,
@@ -86,6 +99,11 @@ const styles = StyleSheet.create({
   },
   ProgressBar: {
     paddingTop: spacing.sm,
+    // flex: 0.1,
+  },
+  clearWrapper: {
     flex: 0.1,
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
